@@ -14,22 +14,21 @@ const ShoppingList = () => {
     dispatch(removeItem(id))
   }
 
-  const handleUpdateItem = (item) => {
-    const queryParams = new URLSearchParams({
-      id: item.id,
-      name: item.name,
-      priority: item.priority,
-      price: item.price,
-      quantity: item.quantity,
-    }).toString();
-
-    router.push(`/shopping-list/update-item?${queryParams}`);
+  const priorityOrder = {
+    High: 3,
+    Medium: 2,
+    Low: 1,
   };
 
-  
+  const sortedItems = [...items].sort((a, b) => {
+    if (a.isPurchased === b.isPurchased) {
+        return priorityOrder[b.priority] - priorityOrder[a.priority];
+    }
+    return a.isPurchased - b.isPurchased;
+});
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 w-full mx-auto">
-      {items.map((item) => (
+      {sortedItems.map((item) => (
         <ItemCard
           key={item.id}
           item={item}

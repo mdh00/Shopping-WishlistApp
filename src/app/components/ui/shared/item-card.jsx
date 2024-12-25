@@ -4,13 +4,15 @@ import {
     CardContent,
     CardTitle,
     CardFooter,
-    CardDescription,
 } from "@/app/components/ui/card";
 import { Pencil, Trash } from "lucide-react";
-import { Switch } from "@/app/components/ui/switch"
-
+import { Switch } from "@/app/components/ui/switch";
+import { useDispatch } from "react-redux";
+import { togglePurchased } from "@/lib/features/shopping-items/itemSlice"; 
 
 function ItemCard(props) {
+    const dispatch = useDispatch();
+
     const getPriorityColor = (priority) => {
         switch (priority) {
             case "High":
@@ -23,25 +25,32 @@ function ItemCard(props) {
                 return "bg-gray-200 text-black";
         }
     };
+
+    const handleTogglePurchased = () => {
+        dispatch(togglePurchased(props.item.id));
+    };
+
     return (
         <Card className="transform transition duration-300 hover:scale-105 my-4 mx-2">
             <CardHeader>
                 <div className="flex justify-between">
-                <div className="flex gap-6">
-                    <CardTitle>{props.item.name}</CardTitle>
-                    <div
+                    <div className="flex gap-6">
+                        <CardTitle>{props.item.name}</CardTitle>
+                        <div
                             className={`w-[90.02px] h-6 rounded-[10px] flex justify-center items-center ${getPriorityColor(
                                 props.item.priority
                             )}`}
                         >
                             {props.item.priority}
                         </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Switch
+                            checked={props.item.isPurchased}
+                            onCheckedChange={handleTogglePurchased}
+                        />
+                    </div>
                 </div>
-                <div className="flex justify-end">
-                    <Switch />
-                </div>
-                </div>
-
             </CardHeader>
             <CardContent>
                 <p>{props.item.price} LKR ( {props.item.quantity} )</p>
